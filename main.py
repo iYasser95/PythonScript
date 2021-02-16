@@ -1,3 +1,4 @@
+import methods
 from datetime import date
 today = str(date.today())
 print("*" * 50)
@@ -44,22 +45,38 @@ f.write(f"// \n// {file_name}.swift \n// Created on {today} \n//\n\n")
 f.write("import Foundation \n\n")
 f.write(f"class {file_name}: Codable ")
 f.write("{ \n")
-for paramter in my_dict:
-    index = list(my_dict.keys()).index(paramter)
-    f.write(f"\tlet {paramter}: {my_types[index]}?\n")
+for parameter in my_dict:
+    index = list(my_dict.keys()).index(parameter)
+    f.write(f"\tlet {parameter}: {my_types[index]}?\n")
 f.write("\n")
 f.write("\tinit(")
 my_index = 0
-for paramter in my_dict:
+for parameter in my_dict:
     my_index += 1
-    index = list(my_dict.keys()).index(paramter)
-    f.write(f"{paramter}: {my_types[index]}? ")
+    index = list(my_dict.keys()).index(parameter)
+    f.write(f"{parameter}: {my_types[index]}?")
     if my_index != len(my_dict):
-        f.write(",")
+        f.write(", ")
 
 f.write(") {\n")
 
-for paramter in my_dict:
-    index = list(my_dict.keys()).index(paramter)
-    f.write(f"\t\tself.{paramter} = {paramter} \n")
-f.write("\t} \n}")
+for parameter in my_dict:
+    index = list(my_dict.keys()).index(parameter)
+    f.write(f"\t\tself.{parameter} = {parameter} \n")
+f.write("\t} \n}\n\n")
+f.write(f"// MARK: {file_name} convenience initializers and mutators\n\n")
+f.write(f"extension {file_name}")
+f.write(" {\n")
+f.write("\tconvenience init(data: Data) throws {\n")
+f.write(f"\t\tlet object = try newJSONDecoder().decode({file_name}.self, from: data)\n")
+f.write("\t\tself.init(")
+my_index = 0
+for parameter in my_dict:
+    my_index +=1
+    index = list(my_dict.keys()).index(parameter)
+    f.write(f"{parameter}: object.{parameter}")
+    if my_index != len(my_dict):
+        f.write(", ")
+f.write(")\n")
+f.write("\t}\n")
+f.write(methods.convenience_init)
