@@ -2,9 +2,6 @@ import methods
 from datetime import date
 def generate_script(file_name, my_dict, my_types):
     today = str(date.today())
-    print(file_name)
-    print(my_dict)
-    print(my_types)
     f = open(f"{file_name}.swift", "x")
     f.write(f"// \n// {file_name}.swift \n// Created on {today} \n//\n\n")
     f.write("import Foundation \n\n")
@@ -59,7 +56,7 @@ def generate_script(file_name, my_dict, my_types):
         my_index += 1
         if my_index != 1:
             f.write("\t\t\t\t\t\t\t\t  ")
-        f.write(f"{parameter}: {parameter} ?? = self.{parameter}")
+        f.write(f"{parameter}: {parameter} ?? self.{parameter}")
         if my_index != len(my_dict):
             f.write(",")
         else:
