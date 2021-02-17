@@ -72,7 +72,7 @@ f.write(f"\t\tlet object = try newJSONDecoder().decode({file_name}.self, from: d
 f.write("\t\tself.init(")
 my_index = 0
 for parameter in my_dict:
-    my_index +=1
+    my_index += 1
     index = list(my_dict.keys()).index(parameter)
     f.write(f"{parameter}: object.{parameter}")
     if my_index != len(my_dict):
@@ -80,3 +80,36 @@ for parameter in my_dict:
 f.write(")\n")
 f.write("\t}\n")
 f.write(methods.convenience_init)
+f.write("\n")
+f.write(f"\tfunc with(\n")
+my_index = 0
+for parameter in my_dict:
+    my_index += 1
+    index = list(my_dict.keys()).index(parameter)
+    f.write(f"\t\t{parameter}: {my_types[index]}?? = nil")
+    if my_index != len(my_dict):
+        f.write(",")
+    f.write("\n")
+f.write(f"\t) -> {file_name} ")
+f.write("{\n")
+f.write(f"\t\t return {file_name}(")
+my_index = 0
+for parameter in my_dict:
+    my_index += 1
+    index = list(my_dict.keys()).index(parameter)
+    if my_index != 1:
+        f.write("\t\t\t\t\t\t\t\t  ")
+    f.write(f"{parameter}: {parameter} ?? = self.{parameter}")
+    if my_index != len(my_dict):
+        f.write(",")
+    else:
+        f.write(")")
+    f.write("\n")
+f.write("\n \t }\n")
+f.write(methods.json_data)
+f.write("\n}")
+should_add_encoders = input("Do you require encoders functions? (Y/N): ")
+should_add_encoders = should_add_encoders.lower()
+if should_add_encoders == "y" or should_add_encoders == "yes":
+    f.write("\n")
+    f.write(methods.json_encoders)
